@@ -1,0 +1,26 @@
+import io
+import proc
+
+Sex :: enum { Male, Female }
+
+Person :: struct {
+  name String
+  age u8[1-150]
+  sex Sex
+}
+
+Person.is_adult :: self {
+  self.age >= 18
+}
+
+main :: {
+  me = Person {
+    name = "Dillon",
+    age = 20,
+    sex = :Male,
+  }
+
+  io.println("Hello, my name is {}. I'm a {} year old {}", me.name, me.age, me.sex)
+  io.println("  *I am {} an adult", me.is_adult() then "certainly" else "not")
+  proc.exit(0)
+}

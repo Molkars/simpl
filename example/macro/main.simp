@@ -1,0 +1,53 @@
+import io
+
+builder :: module {
+  import macroing::{Struct, Function, quote}
+
+  Builder :: macro {
+    :: context, item Struct {
+      builder_type = Struct::builder(f"{item.name}.Builder")
+      foreach in item.fields {
+        builder_type.add_field(field.name, field.type.optional())
+      }
+      builder_type = builder_type.finalize()
+      context.add_item(builder_type)
+
+      foreach in item.fields {
+        function = Function::builder(
+          name=f"{item.name}.Builder.with_{field.name}",
+          args=("self", "value")
+        )
+        function.add_item(quote { self.${field.name} = value })
+        function = function.build()
+        context.add_item(function)
+      }
+    }
+  }
+}
+
+Sex :: enum {
+  Male,
+  Female,
+}
+
+@(impl builder::Builder)
+Person :: struct {
+  name String
+  age u8
+  sex Sex
+}
+
+Person::Builder {
+  name String?
+  age u8?
+  sex Sex?
+}
+
+main :: {
+  me = Person::Builder()
+    .with_name("Dillon")
+    .with_age(20)
+    .with_sex(::Male)
+    .build()!
+  io.println "Hello, my name is {me.name}. I'm a {me.age} year old {me.sex}."
+}

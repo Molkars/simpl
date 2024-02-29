@@ -1,0 +1,31 @@
+import cli
+import io
+
+@(impl cli::App {
+  description = "My application",
+})
+MyApp :: struct {
+  /// the command to run
+  command Command
+}
+
+@(impl cli::Command)
+Command :: enum {
+  Greet {
+    name String,
+    @cli(default=false)
+    vim bool
+  },
+  Dismiss {
+    name String
+  }
+}
+
+main :: {
+  app = <MyApp as cli::App>::parse()!
+
+  when app.command {
+    is ::Greet { name } => io.println("Hello, {name}")
+    is ::Dismiss { name } => io.println("Goodbye, {name}")
+  }
+}

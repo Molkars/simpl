@@ -1,0 +1,7 @@
+import io
+import proc
+
+main :: {
+  io.println "Hello, World"
+  proc.exit 0
+}
