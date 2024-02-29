@@ -1,5 +1,5 @@
 
 # SimpL
-> *Simp*le *L* anguage
+> **Simp**le **L** anguage
 
 
